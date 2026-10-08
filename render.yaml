@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: quizzesz-api-tahirsid07
+    runtime: node
+    plan: starter
+    region: singapore
+    buildCommand: corepack pnpm install --frozen-lockfile
+    startCommand: corepack pnpm start
+    healthCheckPath: /api/health
+    disk:
+      name: aptiquiz-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: 22.13.0
+      - key: NODE_ENV
+        value: production
+      - key: DB_PATH
+        value: /var/data/aptiquiz.sqlite
+      - key: HOST_ACCESS_CODE
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: https://quizzesz.vercel.app
