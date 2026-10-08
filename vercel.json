@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://quizzesz-api-tahirsid07.onrender.com/api/:path*"
+    }
+  ]
+}
