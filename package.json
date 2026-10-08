@@ -1,0 +1,23 @@
+{
+  "name": "aptiquiz-hackathon-mvp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A real-time aptitude quiz MVP for Lloyd Hackathon Problem Statement 3",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env server/index.mjs",
+    "start": "node --env-file-if-exists=.env server/index.mjs",
+    "test": "node --test",
+    "loadtest": "node scripts/loadtest.mjs",
+    "check": "node --check server/index.mjs && node --check server/game.mjs && node --check server/db.mjs && node --check public/app.js && node --test"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "zod": "^4.1.0"
+  }
+}

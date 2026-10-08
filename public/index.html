@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#14213d" />
+    <meta name="description" content="A live multiplayer aptitude quiz for campus placement practice." />
+    <title>AptiQuiz | Play together, think faster</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="AptiQuiz home">
+        <span class="brand-mark" aria-hidden="true">AQ</span>
+        <span>Apti<span class="brand-accent">Quiz</span></span>
+      </a>
+      <nav class="top-nav" aria-label="Main navigation">
+        <button class="nav-link" data-nav="home">Play</button>
+        <button class="nav-link" data-nav="host">Host</button>
+        <button class="nav-link" data-nav="league">League</button>
+        <button class="nav-link" data-nav="performance">My performance</button>
+        <button class="nav-link" data-nav="account">Account</button>
+        <button class="nav-link nav-join" data-nav="join">Join quiz</button>
+      </nav>
+      <div class="live-badge"><span class="live-dot"></span> Live rooms</div>
+    </header>
+    <main id="app" class="app-shell" aria-live="polite"></main>
+    <div id="toast" class="toast" role="status" aria-live="assertive"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
