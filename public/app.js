@@ -106,7 +106,7 @@ function ensureSocket(hostToken = state.hostToken) {
     state.socket.disconnect();
     state.socket = null;
   }
-  const socket = window.io({ auth: { hostToken } });
+  const socket = window.io(window.APTIQUIZ_API_ORIGIN || undefined, { auth: { hostToken } });
   state.socket = socket;
   socket.on("connect", () => {
     state.connection = "online";
