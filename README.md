@@ -157,16 +157,19 @@ The host session and active timers live in server memory. Restarting the server 
 
 ## 14. Deployment
 
-**Status: prepared for a single-process Node deployment, not deployed to permanent hosting.** A Cloudflare quick tunnel can provide a temporary share URL while the local app and tunnel processes remain running; that URL is ephemeral and is not a permanent deployment.
+The Vercel project serves the static frontend. Its `/api/*` requests are proxied to a single-process Node service, while Socket.IO connects directly to that service. SQLite must live on a persistent disk because it stores player accounts and quiz data.
 
-For a host that supports a persistent writable volume and long-lived WebSocket connections:
+This repository now includes a Render Blueprint (`render.yaml`) for the Node service and a Vercel rewrite (`vercel.json`) for HTTP API calls. The blueprint uses a paid Starter web service with a 1 GB persistent disk; Render does not support persistent disks on its free web services. Review the provider's current billing before creating the service. The generated `HOST_ACCESS_CODE` is available in the Render service environment for host sign-in.
 
-1. Install dependencies with `corepack pnpm install --frozen-lockfile`.
-2. Set `NODE_ENV=production`, a private `HOST_ACCESS_CODE`, `PORT`, `DB_PATH` on the persistent volume, and `ALLOWED_ORIGINS` to the public app origin.
-3. Run `corepack pnpm start` and expose the configured port over HTTPS.
-4. Confirm `/api/health`, host sign-in, Socket.IO joins, player reconnect and the load test against the deployed service.
+Deployment steps:
 
-The repository does not include provider-specific deployment files, automated migrations, monitoring, backups, TLS configuration, or a public database. Use one server process: rooms and timers are in process memory, and SQLite is a local file. A multi-instance deployment requires architectural changes.
+1. Create the Render service from this repository's Blueprint and deploy the `main` branch after merging these changes.
+2. Confirm the service is named `quizzesz-api-tahirsid07`, so its origin is `https://quizzesz-api-tahirsid07.onrender.com`. If Render assigns a different hostname, update that origin in `vercel.json` and `public/index.html`.
+3. Set `ALLOWED_ORIGINS` to `https://quizzesz.vercel.app`, and keep `DB_PATH=/var/data/aptiquiz.sqlite` on the mounted disk.
+4. Redeploy the Vercel project from `main`. Check `/api/health`, account sign-in, and a Socket.IO connection against the public site.
+5. Copy the generated `HOST_ACCESS_CODE` from Render's environment settings for host sign-in.
+
+Use one backend process: host sessions, active rounds, and timers live in process memory; player accounts and completed quiz data persist in SQLite. A process restart invalidates host sessions and interrupts active rounds. This deployment does not provide automated database backups or multi-instance scaling.
 
 ## 15. Limitations
 
