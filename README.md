@@ -157,16 +157,19 @@ The host session and active timers live in server memory. Restarting the server 
 
 ## 14. Deployment
 
-**Status: prepared for a single-process Node deployment, not deployed to permanent hosting.** A Cloudflare quick tunnel can provide a temporary share URL while the local app and tunnel processes remain running; that URL is ephemeral and is not a permanent deployment.
+The Vercel project serves the static frontend. Its `/api/*` requests are proxied to a single-process Node service, while Socket.IO connects directly to that service.
 
-For a host that supports a persistent writable volume and long-lived WebSocket connections:
+This repository includes a Render Blueprint (`render.yaml`) for the free web service and a Vercel rewrite (`vercel.json`) for HTTP API calls. The free backend uses SQLite on temporary storage: accounts, quiz data, and room state can be lost whenever Render restarts, redeploys, or spins down the service after 15 minutes without traffic. The free service may take about a minute to wake up. This setup has no hosting charge, but it is suitable only as a temporary/demo deployment. Durable accounts require a persistent database or paid persistent disk.
 
-1. Install dependencies with `corepack pnpm install --frozen-lockfile`.
-2. Set `NODE_ENV=production`, a private `HOST_ACCESS_CODE`, `PORT`, `DB_PATH` on the persistent volume, and `ALLOWED_ORIGINS` to the public app origin.
-3. Run `corepack pnpm start` and expose the configured port over HTTPS.
-4. Confirm `/api/health`, host sign-in, Socket.IO joins, player reconnect and the load test against the deployed service.
+Deployment steps:
 
-The repository does not include provider-specific deployment files, automated migrations, monitoring, backups, TLS configuration, or a public database. Use one server process: rooms and timers are in process memory, and SQLite is a local file. A multi-instance deployment requires architectural changes.
+1. Create the Render service from this repository's Blueprint.
+2. Confirm the service hostname is `https://quizzesz-api-tahirsid07.onrender.com`. If it differs, update the origin in `vercel.json` and `public/index.html`.
+3. Confirm `ALLOWED_ORIGINS` is `https://quizzesz.vercel.app`.
+4. Deploy the updated `main` branch to Vercel. Check `/api/health`, account sign-in, and a Socket.IO connection.
+5. The generated `HOST_ACCESS_CODE` is available in Render's environment settings for host sign-in.
+
+Use one backend process: host sessions, active rounds, and timers live in process memory.
 
 ## 15. Limitations
 
