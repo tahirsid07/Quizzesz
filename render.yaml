@@ -4,8 +4,8 @@ services:
     runtime: node
     plan: free
     region: singapore
-    buildCommand: corepack pnpm install --frozen-lockfile
-    startCommand: corepack pnpm start
+    buildCommand: npx --yes pnpm@10.12.1 install --frozen-lockfile
+    startCommand: npx --yes pnpm@10.12.1 start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
